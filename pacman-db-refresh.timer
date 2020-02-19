@@ -1,0 +1,10 @@
+[Unit]
+Description=package database update
+
+[Timer]
+Unit=pacman-db-refresh.service
+OnBootSec=30min
+OnUnitActiveSec=2h
+
+[Install]
+WantedBy=network-online.target

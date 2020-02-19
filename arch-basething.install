@@ -1,0 +1,21 @@
+post_install(){
+	getent passwd | awk -F: '($3>=1000)&&($1!="nobody"){print $1}' | xargs addgnupghome
+
+	sed -ibak -re 's/#(Color|VerbosePkgLists|TotalDownload)/\1/' /etc/pacman.conf
+
+	sed -ibak -re 's/(use_lvmetad) *= *1/\1 = 0/' /etc/lvm/lvm.conf
+
+	sed -ibak -re 's/^(GRUB_CMDLINE_LINUX_DEFAULT="quiet )/\1audit=0 systemd.show_status=0 loglevel=3/' -e 's/^(GRUB_CMDLINE_LINUX=")"$/\1zswap.enabled=1"/' /etc/default/grub
+
+	sed -re '/([bw]tmp|lastlog)/ s/^f/L+/; /([bw]tmp|lastlog)/ s/\-$/- \/dev\/null/' /usr/lib/tmpfiles.d/var.conf | sudo tee /etc/tmpfiles.d/var.conf
+
+	systemctl enable --now pacman-db-refresh.timer
+
+
+	# use more sha512 rounds
+	sed -ibak -re '/^password.*sha512/ s/$/ rounds=1000000/' /etc/pam.d/passwd
+
+	cp /etc/login.defs /etc/login.defs.bak
+	grep -Fv SHA_CRYPT_MIN_ROUNDS /etc/login.defs.bak > /etc/login.defs
+	echo "SHA_CRYPT_MIN_ROUNDS 1000000" >> /etc/login.defs
+}

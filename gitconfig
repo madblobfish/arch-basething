@@ -1,0 +1,20 @@
+[pull]
+        ff = only
+[core]
+        editor = subl -w
+        quotePath = false
+[rerere]
+        enabled = true
+[alias]
+        a = add
+        s = status
+        d = diff
+        p = push
+        c = "!f() { git commit -m \"$*\"; }; f"
+        t = "!f() { git tag -m \"\" \"$*\"; }; f"
+[merge]
+        conflictStyle = diff3
+[status]
+        showStash = true
+[user]
+        useConfigOnly = true

@@ -1,0 +1,6 @@
+[Unit]
+Description=updating package database
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pacman -Sy
